@@ -30,9 +30,3 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
-
-# For production with a reverse proxy (uncomment and configure)
-# networks:
-#   default:
-#     external:
-#       name: traefik-network
