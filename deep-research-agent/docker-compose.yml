@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: research-agent-backend
+    ports:
+      - "8001:8000"
+    environment:
+      - ANTHROPIC_API_KEY=
+      - OPENAI_API_KEY=
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=http://localhost:8001
+    container_name: research-agent-frontend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# For production with a reverse proxy (uncomment and configure)
+# networks:
+#   default:
+#     external:
+#       name: traefik-network
